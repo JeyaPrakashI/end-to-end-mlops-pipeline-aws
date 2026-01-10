@@ -1,3 +1,5 @@
+![CI/CD](https://github.com/JeyaPrakashI/end-to-end-mlops-pipeline-aws/actions/workflows/train.yml/badge.svg)
+
 # end-to-end-mlops-pipeline-aws
 Zero‑cost, serverless MLOps pipeline with CI/CD, IaC, and monitoring — built on AWS Free Tier + Hugging Face.
 
