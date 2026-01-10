@@ -33,7 +33,7 @@ training_args = TrainingArguments(
     output_dir="./results",
     per_device_train_batch_size=16,
     per_device_eval_batch_size=16,
-    num_train_epochs=3,   # scaled up from 1 → 3
+    num_train_epochs = 1  # instead of 3
     learning_rate=2e-5,
     weight_decay=0.01,
     evaluation_strategy="epoch",
@@ -52,8 +52,8 @@ def compute_metrics(eval_pred: EvalPrediction):
 trainer = Trainer(
     model=model,
     args=training_args,
-    train_dataset=tokenized_dataset["train"].shuffle(seed=42).select(range(5000)),  # larger slice
-    eval_dataset=tokenized_dataset["test"].shuffle(seed=42).select(range(1000)),    # larger eval
+    train_dataset=tokenized_dataset["train"].shuffle(seed=42).select(range(1000)),  # reduced slice
+    eval_dataset=tokenized_dataset["test"].shuffle(seed=42).select(range(500)),     # reduced eval
     compute_metrics=compute_metrics
 )
 
