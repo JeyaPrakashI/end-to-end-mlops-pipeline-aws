@@ -1,5 +1,11 @@
-FROM python:3.10-slim
-WORKDIR /app
-COPY inference.py .
-RUN pip install --no-cache-dir transformers torch huggingface_hub
-CMD ["python", "inference.py"]
+FROM public.ecr.aws/lambda/python:3.10
+
+# Install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy handler
+COPY lambda_function.py .
+
+# Set Lambda entrypoint
+CMD ["lambda_function.lambda_handler"]
