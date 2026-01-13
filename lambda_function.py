@@ -2,25 +2,27 @@ import json
 from transformers import pipeline
 
 # Load model once at cold start
-classifier = pipeline("sentiment-analysis", model="distilbert-base-uncased-finetuned-sst-2-english")
+classifier = pipeline("sentiment-analysis")
 
 def lambda_handler(event, context):
-    # API Gateway sends body as a string
-    body = event.get("body", "{}")
     try:
-        data = json.loads(body)
-    except:
-        data = {}
+        body = json.loads(event.get("body", "{}"))
+        text = body.get("text", "")
 
-    text = data.get("text", "")
-    if not text:
+        if not text:
+            return {
+                "statusCode": 400,
+                "body": json.dumps({"error": "No text provided"})
+            }
+
+        result = classifier(text)
         return {
-            "statusCode": 400,
-            "body": json.dumps({"error": "Missing 'text' in request"})
+            "statusCode": 200,
+            "body": json.dumps(result)
         }
 
-    result = classifier(text)
-    return {
-        "statusCode": 200,
-        "body": json.dumps(result)
-    }
+    except Exception as e:
+        return {
+            "statusCode": 500,
+            "body": json.dumps({"error": str(e)})
+        }
