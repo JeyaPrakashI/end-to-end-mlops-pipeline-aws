@@ -25,8 +25,8 @@ jobs:
           echo "ECR_URI=867725336535.dkr.ecr.eu-north-1.amazonaws.com" >> $GITHUB_ENV
           echo "IMAGE_URI=867725336535.dkr.ecr.eu-north-1.amazonaws.com/mlops-lambda:latest" >> $GITHUB_ENV
 
-- name: Login to ECR
-  run: aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin $ECR_URI
+      - name: Login to ECR
+        run: aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin $ECR_URI
       - name: Build Docker image
         run: |
           docker build -t $IMAGE_URI .
