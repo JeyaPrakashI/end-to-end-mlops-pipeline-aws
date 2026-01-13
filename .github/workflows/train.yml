@@ -20,7 +20,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install transformers==4.36.2 peft==0.7.1 accelerate==0.25.0 datasets huggingface_hub
+        pip install transformers==4.36.2 peft==0.7.1 accelerate==0.25.0 datasets huggingface_hub jq
 
     - name: Authenticate with Hugging Face
       env:
@@ -31,7 +31,20 @@ jobs:
     - name: Run training script
       run: |
         python train.py
+      # training script should save eval results to results.json
+
+    - name: Check accuracy gate
+      run: |
+        ACCURACY=$(jq '.eval_accuracy' results.json)
+        echo "Model accuracy: $ACCURACY"
+        if (( $(echo "$ACCURACY < 0.85" | bc -l) )); then
+          echo "❌ Accuracy below threshold. Failing pipeline."
+          exit 1
+        else
+          echo "✅ Accuracy gate passed."
+        fi
 
     - name: Push model to Hub
+      if: success()   # only runs if accuracy gate passes
       run: |
         python push_to_hub.py
