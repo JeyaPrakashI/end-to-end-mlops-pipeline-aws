@@ -5,7 +5,7 @@ from transformers import pipeline
 classifier = pipeline("sentiment-analysis", model="distilbert-base-uncased-finetuned-sst-2-english")
 
 def lambda_handler(event, context):
-    # Parse API Gateway proxy event
+    # API Gateway sends body as a string
     body = event.get("body", "{}")
     try:
         data = json.loads(body)
