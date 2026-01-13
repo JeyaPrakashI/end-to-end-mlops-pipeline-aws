@@ -1,5 +1,9 @@
 ![CI/CD Pipeline](https://github.com/JeyaPrakashI/end-to-end-mlops-pipeline-aws/actions/workflows/train.yml/badge.svg)
 
+[![Hugging Face](https://img.shields.io/badge/HuggingFace-model-yellow)](https://huggingface.co/JeyaPrakashI/distilbert-mlops-demo-ci)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JeyaPrakashI/end-to-end-mlops-pipeline-aws/blob/main/notebooks/demo.ipynb)
+
+
 # End-to-End MLOps Pipeline (AWS Free Tier)
 Zero‑cost, serverless MLOps pipeline with CI/CD, IaC, and monitoring — built on AWS Free Tier + Hugging Face.
 
