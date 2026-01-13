@@ -20,28 +20,31 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Login to ECR and set image URI
+      - name: Set environment variables
         run: |
           ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
           ECR_URI="${ACCOUNT_ID}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com"
           IMAGE_URI="${ECR_URI}/${{ secrets.ECR_REPO }}:latest"
+
+          echo "ACCOUNT_ID=$ACCOUNT_ID" >> $GITHUB_ENV
+          echo "ECR_URI=$ECR_URI" >> $GITHUB_ENV
+          echo "IMAGE_URI=$IMAGE_URI" >> $GITHUB_ENV
+
+      - name: Login to ECR
+        run: |
           echo "Logging in to $ECR_URI"
           aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin $ECR_URI
-          echo "$IMAGE_URI" > image_uri.txt
 
       - name: Build Docker image
         run: |
-          IMAGE_URI=$(cat image_uri.txt)
           docker build -t $IMAGE_URI .
 
       - name: Push image to ECR
         run: |
-          IMAGE_URI=$(cat image_uri.txt)
           docker push $IMAGE_URI
 
       - name: Update Lambda to new image
         run: |
-          IMAGE_URI=$(cat image_uri.txt)
           aws lambda update-function-code \
             --function-name "${{ secrets.LAMBDA_FUNCTION_NAME }}" \
             --image-uri "$IMAGE_URI"
