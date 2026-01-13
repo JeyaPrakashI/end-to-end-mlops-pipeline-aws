@@ -17,7 +17,9 @@ It bridges the gap between **ML research and cloud production**, showing recruit
 3. **Evaluation** (accuracy gates, reproducibility checks)  
 4. **CI/CD automation** (GitHub Actions workflows)  
 5. **Deployment** (Hugging Face Hub, AWS Lambda/ECS)  
-6. **Monitoring** (CloudWatch metrics, drift detection)  
+6. **Monitoring** (CloudWatch metrics, drift detection)
+
+### Pipeline Diagram ```mermaid flowchart LR A[Data sources (S3, HF Datasets)] --> B[Preprocessing & Tokenization] B --> C[Training (LoRA, FP16)] C --> D[Evaluation (Accuracy Gates)] D --> E[CI/CD (GitHub Actions)] E --> F[Deployment (HF Hub, AWS Lambda/ECS)] F --> G[Monitoring (CloudWatch, Drift Detection)]
 
 ---
 
