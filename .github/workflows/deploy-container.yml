@@ -38,12 +38,13 @@ jobs:
         run: |
           docker push $IMAGE_URI
 
-      - name: Update Lambda to new image
+      - name: Update Lambda to new zip
         run: |
+          zip -r function.zip .
           aws lambda update-function-code \
             --function-name "${{ secrets.LAMBDA_FUNCTION_NAME }}" \
-            --image-uri "$IMAGE_URI"
-
+            --zip-file fileb://function.zip
+     
       - name: Run training
         run: |
           python train.py \
