@@ -2,6 +2,7 @@ from transformers import AutoModelForSequenceClassification, AutoTokenizer, Trai
 from datasets import load_dataset
 from peft import get_peft_model, LoraConfig, TaskType
 import numpy as np
+import json
 
 # --- Model + Tokenizer ---
 model_name = "distilbert-base-uncased"
@@ -33,7 +34,7 @@ training_args = TrainingArguments(
     output_dir="./results",
     per_device_train_batch_size=16,
     per_device_eval_batch_size=16,
-    num_train_epochs = 2,  # instead of 3
+    num_train_epochs=2,  # CI/CD run uses 2 epochs
     learning_rate=2e-5,
     weight_decay=0.01,
     evaluation_strategy="epoch",
@@ -61,6 +62,10 @@ trainer = Trainer(
 trainer.train()
 results = trainer.evaluate()
 print("Evaluation results:", results)
+
+# --- Save results.json for CI/CD accuracy gate ---
+with open("results.json", "w") as f:
+    json.dump(results, f)
 
 # --- Save locally for push_to_hub.py ---
 trainer.save_model("./results")
