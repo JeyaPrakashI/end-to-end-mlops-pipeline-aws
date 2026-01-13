@@ -1,0 +1,33 @@
+name: Terraform Infra Provisioning
+
+on:
+  push:
+    paths:
+      - 'infra/**'
+  workflow_dispatch:
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.9.0   # pin version for reproducibility
+
+      - name: Terraform Init
+        working-directory: infra
+        run: terraform init
+
+      - name: Terraform Plan
+        working-directory: infra
+        run: terraform plan -out=tfplan
+
+      - name: Terraform Apply
+        if: github.event_name == 'workflow_dispatch'
+        working-directory: infra
+        run: terraform apply -auto-approve tfplan
