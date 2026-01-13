@@ -20,22 +20,23 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
+      - name: Set environment variables
+        run: |
+          echo "ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)" >> $GITHUB_ENV
+          echo "ECR_URI=$ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com" >> $GITHUB_ENV
+          echo "IMAGE_URI=$ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPO }}:latest" >> $GITHUB_ENV
+
       - name: Login to ECR
         run: |
-          ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-          ECR_URI="$ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com"
-          echo "Logging in to ECR at $ECR_URI"
-          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin "$ECR_URI"
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin $ECR_URI
 
       - name: Build Docker image
         run: |
-          IMAGE_URI="$ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPO }}:latest"
-          echo "IMAGE_URI=$IMAGE_URI" >> $GITHUB_ENV
-          docker build -t "$IMAGE_URI" .
+          docker build -t $IMAGE_URI .
 
       - name: Push image to ECR
         run: |
-          docker push "$IMAGE_URI"
+          docker push $IMAGE_URI
 
       - name: Update Lambda to new image
         run: |
