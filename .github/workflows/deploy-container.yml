@@ -22,9 +22,9 @@ jobs:
 
       - name: Login to ECR
         run: |
-          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} \
-          | docker login --username AWS --password-stdin \
-          $(aws sts get-caller-identity --query Account --output text).dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+          ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+          ECR_URI=$ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin $ECR_URI
 
       - name: Build Docker image
         run: |
