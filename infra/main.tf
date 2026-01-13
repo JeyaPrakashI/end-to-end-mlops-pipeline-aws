@@ -1,0 +1,99 @@
+# ===================================================================
+# Terraform Starter for DistilBERT MLOps Demo
+# Resources: S3 bucket, IAM role, Lambda (ECR image), API Gateway
+# ===================================================================
+
+provider "aws" {
+  region = "eu-north-1"   # updated to match your ECR region
+}
+
+# -------------------------------
+# S3 Bucket for Metrics/Artifacts
+# -------------------------------
+resource "aws_s3_bucket" "mlops_metrics" {
+  bucket = "distilbert-mlops-metrics"
+  acl    = "private"
+
+  tags = {
+    Project = "DistilBERT-MLOps"
+    Owner   = "JeyaPrakashI"
+  }
+}
+
+# -------------------------------
+# IAM Role for Lambda Execution
+# -------------------------------
+resource "aws_iam_role" "lambda_exec" {
+  name               = "lambda_exec_role"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_basic" {
+  role       = aws_iam_role.lambda_exec.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+# -------------------------------
+# Lambda Function (Container Image)
+# -------------------------------
+resource "aws_lambda_function" "inference" {
+  function_name = "distilbert_infer"
+  role          = aws_iam_role.lambda_exec.arn
+  package_type  = "Image"
+  image_uri     = "867725336535.dkr.ecr.eu-north-1.amazonaws.com/mlops-lambda:latest"  # updated with your IMAGE_URI
+  timeout       = 30
+  memory_size   = 1024
+
+  environment {
+    variables = {
+      S3_BUCKET = aws_s3_bucket.mlops_metrics.bucket
+    }
+  }
+}
+
+# -------------------------------
+# API Gateway (HTTP API)
+# -------------------------------
+resource "aws_apigatewayv2_api" "api" {
+  name          = "distilbert-api"
+  protocol_type = "HTTP"
+}
+
+resource "aws_apigatewayv2_integration" "lambda_integration" {
+  api_id           = aws_apigatewayv2_api.api.id
+  integration_type = "AWS_PROXY"
+  integration_uri  = aws_lambda_function.inference.invoke_arn
+}
+
+resource "aws_apigatewayv2_route" "default_route" {
+  api_id    = aws_apigatewayv2_api.api.id
+  route_key = "POST /infer"
+  target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
+}
+
+resource "aws_apigatewayv2_stage" "default_stage" {
+  api_id      = aws_apigatewayv2_api.api.id
+  name        = "$default"
+  auto_deploy = true
+}
+
+# -------------------------------
+# Outputs
+# -------------------------------
+output "api_endpoint" {
+  value = aws_apigatewayv2_stage.default_stage.invoke_url
+}
