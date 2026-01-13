@@ -46,6 +46,24 @@ It bridges the gap between **ML research and cloud production**, showing recruit
 
 ---
 
+## ⚠️ Limitations & Risks
+- Inherits biases from DistilBERT’s pretraining corpus (Wikipedia + Toronto Book Corpus).  
+- Restricted to English text.  
+- Not suitable for sensitive domains (medical, legal, financial) without domain‑specific fine‑tuning.  
+
+---
+
+## 🌱 Environmental Impact
+By using LoRA instead of full fine‑tuning:
+- Compute requirements reduced by ~90%  
+- Lower carbon footprint and operational costs  
+
+---
+
+## 👤 Contact
+**Author:** Jeya Prakash I  
+**Goal:** Bridging the gap between ML Research and Cloud Production  
+
 ## 📂 Usage
 
 Clone the repo:
