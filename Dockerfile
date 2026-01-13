@@ -1,11 +1,10 @@
-FROM public.ecr.aws/lambda/python:3.10
+FROM public.ecr.aws/lambda/python:3.9
 
-# Install dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Install Hugging Face + Torch
+RUN pip install --no-cache-dir transformers torch
 
-# Copy handler
-COPY lambda_function.py .
+# Copy function code
+COPY lambda_function.py ${LAMBDA_TASK_ROOT}
 
-# Set Lambda entrypoint
+# Set the handler (file.function)
 CMD ["lambda_function.lambda_handler"]
