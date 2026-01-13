@@ -22,13 +22,8 @@ jobs:
 
       - name: Set environment variables
         run: |
-          ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-          ECR_URI="${ACCOUNT_ID}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com"
-          IMAGE_URI="${ECR_URI}/${{ secrets.ECR_REPO }}:latest"
-
-          echo "ACCOUNT_ID=$ACCOUNT_ID" >> $GITHUB_ENV
-          echo "ECR_URI=$ECR_URI" >> $GITHUB_ENV
-          echo "IMAGE_URI=$IMAGE_URI" >> $GITHUB_ENV
+          echo "ECR_URI=867725336535.dkr.ecr.eu-north-1.amazonaws.com" >> $GITHUB_ENV
+          echo "IMAGE_URI=867725336535.dkr.ecr.eu-north-1.amazonaws.com/mlops-lambda:latest" >> $GITHUB_ENV
 
       - name: Login to ECR
         run: |
