@@ -1,5 +1,46 @@
-      - name: List repo files
-        run: ls -R
+name: Build & Deploy Lambda Container
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Configure AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Set environment variables
+        run: |
+          echo "ECR_URI=867725336535.dkr.ecr.eu-north-1.amazonaws.com" >> $GITHUB_ENV
+          echo "IMAGE_URI=867725336535.dkr.ecr.eu-north-1.amazonaws.com/mlops-lambda:latest" >> $GITHUB_ENV
+
+      - name: Login to ECR
+        run: aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin $ECR_URI
+
+      - name: Build Docker image
+        run: |
+          docker build -t $IMAGE_URI .
+
+      - name: Push image to ECR
+        run: |
+          docker push $IMAGE_URI
+
+      - name: Update Lambda to new image
+        run: |
+          aws lambda update-function-code \
+            --function-name "${{ secrets.LAMBDA_FUNCTION_NAME }}" \
+            --image-uri "$IMAGE_URI"
 
       - name: Run training
         run: |
