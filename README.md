@@ -73,6 +73,11 @@ By using LoRA instead of full fine‑tuning:
 **Author:** Jeya Prakash I  
 **Goal:** Bridging the gap between ML Research and Cloud Production  
 
+---
+
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![GitHub Stars](https://img.shields.io/github/stars/JeyaPrakashI/end-to-end-mlops-pipeline-aws?style=social)
+
 ## 📂 Usage
 
 Clone the repo:
