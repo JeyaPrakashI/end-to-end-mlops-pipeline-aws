@@ -12,12 +12,17 @@ provider "aws" {
 # -------------------------------
 resource "aws_s3_bucket" "mlops_metrics" {
   bucket = "distilbert-mlops-metrics"
-  acl    = "private"
 
   tags = {
     Project = "DistilBERT-MLOps"
     Owner   = "JeyaPrakashI"
   }
+}
+
+# Separate ACL resource (fixes deprecation warning)
+resource "aws_s3_bucket_acl" "mlops_metrics_acl" {
+  bucket = aws_s3_bucket.mlops_metrics.id
+  acl    = "private"
 }
 
 # -------------------------------
