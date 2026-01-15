@@ -12,6 +12,19 @@ Zero‑cost, serverless MLOps pipeline with CI/CD, IaC, and monitoring — built
 
 ---
 
+## 🏗️ Architecture Diagram
+![Architecture](docs/diagrams/architecture.png)
+
+## 🔄 CI/CD Workflow
+![CI/CD Flow](docs/diagrams/cicd_flow.png)
+
+## 🔁 Model Lifecycle
+![Model Lifecycle](docs/diagrams/model_lifecycle.png)
+
+
+---
+
+
 ## 📚 Table of Contents
 - [CI/CD Status](#-cicd-status)
 - [Project Overview](#-project-overview)
