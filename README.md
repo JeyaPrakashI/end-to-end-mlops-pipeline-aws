@@ -1,3 +1,6 @@
+## 🚀 CI/CD Status
+
+![Terraform Infra Provisioning](https://github.com/JeyaPrakashI/end-to-end-mlops-pipeline-aws/actions/workflows/terraform.yml/badge.svg)
 ![CI/CD Pipeline](https://github.com/JeyaPrakashI/end-to-end-mlops-pipeline-aws/actions/workflows/train.yml/badge.svg)
 
 [![Hugging Face](https://img.shields.io/badge/HuggingFace-model-yellow)](https://huggingface.co/JeyaPrakashI/distilbert-mlops-demo-ci)
