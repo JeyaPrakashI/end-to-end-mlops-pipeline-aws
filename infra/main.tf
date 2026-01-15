@@ -18,7 +18,7 @@ provider "aws" {
 }
 
 # -------------------------------
-# Remote Backend Resources
+# Remote Backend Resources (S3 + DynamoDB)
 # -------------------------------
 resource "aws_s3_bucket" "terraform_state" {
   bucket = "distilbert-mlops-terraform-state"
