@@ -22,24 +22,21 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 1.9.0   # pin version for reproducibility
+          terraform_version: 1.9.0  # pin version for reproducibility
 
       # ✅ Init with remote backend reconfigure
       - name: Terraform Init
         working-directory: infra
         run: terraform init -reconfigure
 
-     # ✅ Import only resources not already managed (safe with || true)
-       - name: Terraform Import Existing Resources
-         working-directory: infra
-         run: |
-           # Lambda function (not previously tracked)
-           terraform import aws_lambda_function.inference distilbert_infer_v2 || true
+      # ✅ Import only resources not already managed (safe with || true)
+      - name: Terraform Import Existing Resources
+        working-directory: infra
+        run: |
+          terraform import aws_lambda_function.inference distilbert_infer_v2 || true
+          terraform import aws_s3_bucket.terraform_state distilbert-mlops-terraform-state || true
+          terraform import aws_dynamodb_table.terraform_locks terraform-locks || true
 
-           # Backend infra resources (manually created, now tracked)
-           terraform import aws_s3_bucket.terraform_state distilbert-mlops-terraform-state || true
-           terraform import aws_dynamodb_table.terraform_locks terraform-locks || true
-   
       - name: Terraform Plan
         working-directory: infra
         run: terraform plan -out=tfplan
