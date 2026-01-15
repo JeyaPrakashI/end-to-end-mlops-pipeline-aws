@@ -29,14 +29,19 @@ jobs:
         working-directory: infra
         run: terraform init -reconfigure
 
-      # ✅ Import existing resources into state (safe with || true)
+     # ✅ Import existing resources into state (safe with || true)
       - name: Terraform Import Existing Resources
         working-directory: infra
         run: |
+          # Application resources
           terraform import aws_s3_bucket.mlops_metrics distilbert-mlops-metrics || true
           terraform import aws_iam_role.lambda_exec lambda_exec_role || true
-          terraform import aws_lambda_function.inference distilbert_infer || true
+          terraform import aws_lambda_function.inference distilbert_infer_v2 || true
 
+          # Backend infra resources
+          terraform import aws_s3_bucket.terraform_state distilbert-mlops-terraform-state || true
+          terraform import aws_dynamodb_table.terraform_locks terraform-locks || true
+     
       - name: Terraform Plan
         working-directory: infra
         run: terraform plan -out=tfplan
