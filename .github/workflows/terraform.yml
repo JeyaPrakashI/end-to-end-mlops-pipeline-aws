@@ -34,7 +34,8 @@ jobs:
         run: |
           terraform import aws_s3_bucket.mlops_metrics distilbert-mlops-metrics || true
           terraform import aws_iam_role.lambda_exec lambda_exec_role || true
-
+          terraform import aws_lambda_function.inference distilbert_infer
+          
       - name: Terraform Plan
         working-directory: infra
         run: terraform plan -out=tfplan
