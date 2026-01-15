@@ -19,12 +19,6 @@ resource "aws_s3_bucket" "mlops_metrics" {
   }
 }
 
-# Separate ACL resource (fixes deprecation warning)
-resource "aws_s3_bucket_acl" "mlops_metrics_acl" {
-  bucket = aws_s3_bucket.mlops_metrics.id
-  acl    = "private"
-}
-
 # -------------------------------
 # IAM Role for Lambda Execution
 # -------------------------------
@@ -55,11 +49,15 @@ resource "aws_iam_role_policy_attachment" "lambda_basic" {
 # -------------------------------
 # Lambda Function (Container Image)
 # -------------------------------
+# ⚠️ Option A: Import existing Lambda into Terraform
+# terraform import aws_lambda_function.inference distilbert_infer
+#
+# ⚠️ Option B: Rename function to avoid conflict
 resource "aws_lambda_function" "inference" {
-  function_name = "distilbert_infer"
+  function_name = "distilbert_infer_v2"   # renamed to avoid conflict
   role          = aws_iam_role.lambda_exec.arn
   package_type  = "Image"
-  image_uri     = "867725336535.dkr.ecr.eu-north-1.amazonaws.com/mlops-lambda:latest"  # updated with your IMAGE_URI
+  image_uri     = "867725336535.dkr.ecr.eu-north-1.amazonaws.com/mlops-lambda:latest"
   timeout       = 30
   memory_size   = 1024
 
