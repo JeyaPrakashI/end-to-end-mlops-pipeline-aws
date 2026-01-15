@@ -12,6 +12,19 @@ Zero‑cost, serverless MLOps pipeline with CI/CD, IaC, and monitoring — built
 
 ---
 
+## 📚 Table of Contents
+- [CI/CD Status](#-cicd-status)
+- [Project Overview](#-project-overview)
+- [Pipeline Stages](#-pipeline-stages)
+- [Results](#-results)
+- [Training Details](#-training-details)
+- [Limitations & Risks](#-limitations--risks)
+- [Environmental Impact](#-environmental-impact)
+- [Contact](#-contact)
+- [Usage](#-usage)
+
+---
+
 ## 📌 Project Overview
 This project demonstrates a production‑style MLOps pipeline built entirely on free‑tier resources.  
 It bridges the gap between **ML research and cloud production**, showing recruiters how modern pipelines can be reproducible, automated, and cost‑efficient.
