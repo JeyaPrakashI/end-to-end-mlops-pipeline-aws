@@ -28,6 +28,13 @@ jobs:
         working-directory: infra
         run: terraform init
 
+      # 👇 New step: Import existing resources into state
+      - name: Terraform Import Existing Resources
+        working-directory: infra
+        run: |
+          terraform import aws_s3_bucket.mlops_metrics distilbert-mlops-metrics || true
+          terraform import aws_iam_role.lambda_exec lambda_exec_role || true
+
       - name: Terraform Plan
         working-directory: infra
         run: terraform plan -out=tfplan
