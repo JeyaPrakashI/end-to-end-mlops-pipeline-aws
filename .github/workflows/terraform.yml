@@ -29,13 +29,10 @@ jobs:
         working-directory: infra
         run: terraform init -reconfigure
 
-      # ✅ Import only resources not already managed (safe with || true)
+      # ✅ Skip imports — all resources already tracked
       - name: Terraform Import Existing Resources
         working-directory: infra
-        run: |
-          terraform import aws_lambda_function.inference distilbert_infer_v2 || true
-          terraform import aws_s3_bucket.terraform_state distilbert-mlops-terraform-state || true
-          terraform import aws_dynamodb_table.terraform_locks terraform-locks || true
+        run: echo "All resources already managed by Terraform. Skipping import step."
 
       - name: Terraform Plan
         working-directory: infra
