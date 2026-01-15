@@ -1,10 +1,48 @@
 # ===================================================================
 # Terraform Starter for DistilBERT MLOps Demo
-# Resources: S3 bucket, IAM role, Lambda (ECR image), API Gateway
+# Resources: Remote backend, S3 bucket, IAM role, Lambda (ECR image), API Gateway
 # ===================================================================
 
+terraform {
+  backend "s3" {
+    bucket         = "distilbert-mlops-terraform-state"
+    key            = "infra/terraform.tfstate"
+    region         = "eu-north-1"
+    dynamodb_table = "terraform-locks"
+    encrypt        = true
+  }
+}
+
 provider "aws" {
-  region = "eu-north-1"   # updated to match your ECR region
+  region = "eu-north-1"
+}
+
+# -------------------------------
+# Remote Backend Resources
+# -------------------------------
+resource "aws_s3_bucket" "terraform_state" {
+  bucket = "distilbert-mlops-terraform-state"
+
+  tags = {
+    Project = "DistilBERT-MLOps"
+    Owner   = "JeyaPrakashI"
+  }
+}
+
+resource "aws_dynamodb_table" "terraform_locks" {
+  name         = "terraform-locks"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "LockID"
+
+  attribute {
+    name = "LockID"
+    type = "S"
+  }
+
+  tags = {
+    Project = "DistilBERT-MLOps"
+    Owner   = "JeyaPrakashI"
+  }
 }
 
 # -------------------------------
