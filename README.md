@@ -36,6 +36,24 @@ Deploy to AWS Lambda / ECS → Production deployment
 Monitoring via CloudWatch → Real-time metrics and drift detection
 
 
+
+flowchart LR
+  A[Code Commit / PR<br/>on: push,pull_request] --> B[GitHub Actions Trigger]
+  subgraph CI["CI/CD Jobs"]
+    direction LR
+    B --> C[Lint & Unit Tests]
+    C --> D[Training Job (LoRA, FP16)<br/>(produces checkpoint)]
+    D --> E[Evaluation & Accuracy Gate<br/>(blocks on fail)]
+    E --> F[Push to Hugging Face Hub<br/>(model + tokenizer + metadata)]
+    F --> G[Build Artifact (container/function)]
+    G --> H[Deploy to AWS Lambda / ECS]
+  end
+  H --> I[Monitoring (CloudWatch, Drift Detection)]
+  I --> J[Retraining Trigger<br/>(scheduled or drift)]
+  J --> D
+
+
+
 ## 🔁 Model Lifecycle
 ![Model Lifecycle](docs/diagrams/model_lifecycle.png)
 
