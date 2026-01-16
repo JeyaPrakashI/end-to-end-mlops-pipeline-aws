@@ -18,6 +18,24 @@ Zero‑cost, serverless MLOps pipeline with CI/CD, IaC, and monitoring — built
 ## 🔄 CI/CD Workflow
 ![CI/CD Flow](docs/diagrams/cicd_flow.png)
 
+CI/CD Workflow Breakdown
+Code Commit / PR → Developer pushes code or opens a pull request
+
+GitHub Actions Trigger → CI/CD pipeline starts automatically
+
+Lint & Unit Tests → Code quality and correctness checks
+
+Training Job (LoRA) → Model fine-tuning with LoRA
+
+Evaluation & Accuracy Gate → Performance validation
+
+Push to Hugging Face Hub → Model versioning and sharing
+
+Deploy to AWS Lambda / ECS → Production deployment
+
+Monitoring via CloudWatch → Real-time metrics and drift detection
+
+
 ## 🔁 Model Lifecycle
 ![Model Lifecycle](docs/diagrams/model_lifecycle.png)
 
