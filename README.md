@@ -71,7 +71,26 @@ It bridges the gap between **ML research and cloud production**, showing recruit
 6. **Monitoring** (CloudWatch metrics, drift detection)
 
 ### Pipeline Diagram 
-```mermaid flowchart LR A[Data sources (S3, HF Datasets)] --> B[Preprocessing & Tokenization] B --> C[Training (LoRA, FP16)] C --> D[Evaluation (Accuracy Gates)] D --> E[CI/CD (GitHub Actions)] E --> F[Deployment (HF Hub, AWS Lambda/ECS)] F --> G[Monitoring (CloudWatch, Drift Detection)]
+```mermaid 
+flowchart LR
+    subgraph Data_Prep [Data & Prep]
+        A[(Data Sources)] -- S3/HF --> B[Preprocessing]
+    end
+
+    subgraph Core_ML [Model Training]
+        B --> C[LoRA Training]
+        C --> D{Evaluation}
+    end
+
+    subgraph DevOps [Deployment & Ops]
+        D -- Pass --> E[CI/CD Pipeline]
+        E --> F[HF Hub / AWS]
+        F --> G[Monitoring]
+    end
+
+    %% Styling
+    style D fill:#f9f,stroke:#333,stroke-width:2px
+    style E fill:#bbf,stroke:#333,stroke-width:2px
 ```
 ---
 
