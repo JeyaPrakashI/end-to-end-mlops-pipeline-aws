@@ -88,9 +88,10 @@ flowchart LR
         F --> G[Monitoring]
     end
 
-    %% Styling
-    style D fill:#f9f,stroke:#333,stroke-width:2px
-    style E fill:#bbf,stroke:#333,stroke-width:2px
+    %% Styling with explicit text color (color:#000) for visibility
+    style D fill:#f9f,stroke:#333,stroke-width:2px,color:#000
+    style E fill:#bbf,stroke:#333,stroke-width:2px,color:#000
+    style F fill:#bbf,stroke:#333,stroke-width:2px,color:#000
 ```
 ---
 
